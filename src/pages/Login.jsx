@@ -1,8 +1,11 @@
-import { Button, Center, Flex, FormLabel, Input, Text, FormControl, FormHelperText, FormErrorMessage, Link } from "@chakra-ui/react";
+import { Button, Center, Flex, FormLabel, Input, Text, FormControl, FormHelperText, FormErrorMessage, Link, useToast } from "@chakra-ui/react";
 import { useState } from "react";
+import { axiosAuthHandler } from "../handler/axiosHandler";
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
-
+  const toast = useToast()
+  const navigate = useNavigate();
   const [input, setInput] = useState({
     username: '',
     password: ''
@@ -20,14 +23,45 @@ function LoginPage() {
     })
   }
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const checkUsername = input.username.length < 4
     const checkPassword = input.password.length < 6
 
-    setIsError({
-      username: checkUsername,
-      password: checkPassword
-    })
+    if (checkUsername || checkPassword) {
+      setIsError({
+        username: checkUsername,
+        password: checkPassword
+      })
+      return
+    }
+
+    try {
+      const data = await axiosAuthHandler.post('/api/auth/login', input)
+
+      localStorage.setItem('token', data.token)
+
+      toast({
+        title: "Logged in successfully!",
+        status: 'success',
+        isClosable: true,
+      })
+
+      navigate('/home')
+
+    } catch (error) {
+      console.log(error.response.data.message)
+      return toast({
+        title: `${error.response.data.message}`,
+        status: 'error',
+        isClosable: true,
+      })
+    }
+
+    // if (data.status === 200) {
+    //   localStorage.setItem('token', data.data.token)
+    //   window.location.href = '/products'
+    // }
+
   }
 
   return (
