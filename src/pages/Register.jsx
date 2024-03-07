@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 function RegisterPage() {
   const toast = useToast()
+  const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate();
 
@@ -34,6 +35,7 @@ function RegisterPage() {
   }
 
   const handleRegister = async () => {
+    setLoading(true)
     const checkName = input.name.length < 4
     const checkUsername = input.username.length < 4
     const checkPassword = input.password.length < 6
@@ -48,15 +50,13 @@ function RegisterPage() {
       email: checkEmail
     })
 
-    console.log(input);
-    console.log(inputValid);
-
     if (checkName || checkUsername || checkPassword || checkConfirmPassword || checkEmail) {
       toast({
         title: `Please, fill all fields correctly.`,
         status: 'error',
         isClosable: true,
       })
+      setLoading(false)
     }
 
     try {
@@ -77,15 +77,25 @@ function RegisterPage() {
         })
 
         setTimeout(() => navigate('/'), 2000)
-
+        setLoading(false)
         return
       }
+
+      toast({
+        title: "Registered successfully!",
+        status: 'success',
+        isClosable: true,
+      })
+      setLoading(false)
+      return
     } catch (error) {
       toast({
-        title: `${error.response.data.message}`,
+        title: `${error ? error.response.data.message : 'Error'}`,
         status: 'error',
         isClosable: true,
       })
+      setLoading(false)
+      return
     }
 
   }
@@ -98,7 +108,7 @@ function RegisterPage() {
         <Text mt={4} textAlign="center">Already have an account? <Link color="blue" href="/login">Login</Link></Text>
         <Text mt={4} textAlign="center">Please, fill all fields to create your account.</Text>
 
-        <FormControl isInvalid={input.name || input.username || input.email || input.password || input.confirmPassword} display="flex" flexDirection="column" alignContent="center" mt={65}>
+        <FormControl isInvalid={input.name || input.username || input.email || input.password || input.confirmPassword} display="flex" flexDirection="column" alignContent="center" mt={65} mb={40}>
           <FormLabel htmlFor="name">Name</FormLabel>
           <Input type="text" name="name" placeholder="Enter your full name" value={input.name} onChange={handleInputChange} required />
           {inputValid.name && <FormErrorMessage>Name must contain at least 4 characteres.</FormErrorMessage>}
@@ -123,7 +133,7 @@ function RegisterPage() {
           <FormLabel htmlFor="avatar" mt={5}>Avatar URL</FormLabel>
           <Input type="text" name="avatar" placeholder="Enter your avatar URL" value={input.avatar} onChange={handleInputChange} />
 
-          <Button mt={4} onClick={handleRegister}>Register</Button>
+          <Button mt={4} onClick={handleRegister} isLoading={loading}>Register</Button>
         </FormControl>
       </Flex>
 

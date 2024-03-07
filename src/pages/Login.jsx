@@ -4,6 +4,7 @@ import { axiosAuthHandler } from "../handler/axiosHandler";
 import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
+  const [loading, setLoading] = useState(false)
   const toast = useToast()
   const navigate = useNavigate();
   const [input, setInput] = useState({
@@ -32,13 +33,35 @@ function LoginPage() {
         username: checkUsername,
         password: checkPassword
       })
+
       return
     }
 
     try {
+      setLoading(true)
       const data = await axiosAuthHandler.post('/api/auth/login', input)
+      if (data.data.code === 401) {
+        setLoading(false)
+        toast({
+          title: `${data.data.message}`,
+          status: 'error',
+          isClosable: true,
+        })
+        return
+      }
 
-      localStorage.setItem('token', data.token)
+      if (!data.data.token || !data.data.user) {
+        setLoading(false)
+        toast({
+          title: "An error occurred, please try again.",
+          status: 'error',
+          isClosable: true,
+        })
+        return
+      }
+
+      localStorage.setItem('token', data.data.token)
+      localStorage.setItem('userInfo', JSON.stringify(data.data.user))
 
       toast({
         title: "Logged in successfully!",
@@ -46,15 +69,27 @@ function LoginPage() {
         isClosable: true,
       })
 
+      setLoading(false)
       navigate('/home')
+      return
 
     } catch (error) {
-      console.log(error.response.data.message)
-      return toast({
+      setLoading(false)
+      if (!error.response.data.message) {
+        toast({
+          title: "An error occurred, please try again.",
+          status: 'error',
+          isClosable: true,
+        })
+        return
+      }
+      toast({
         title: `${error.response.data.message}`,
         status: 'error',
         isClosable: true,
       })
+
+      return
     }
 
     // if (data.status === 200) {
@@ -90,7 +125,7 @@ function LoginPage() {
             <FormErrorMessage>Password is required.</FormErrorMessage>
           )}
 
-          <Button mt={6} onClick={handleLogin}>Login</Button>
+          <Button isLoading={loading} mt={6} onClick={() => handleLogin()}>Login</Button>
         </FormControl>
 
         <Text mt={4} textAlign="center">Dont have an account? <Link color="blue" href="/register">Register</Link></Text>
