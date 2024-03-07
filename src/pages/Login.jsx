@@ -2,6 +2,7 @@ import { Button, Center, Flex, FormLabel, Input, Text, FormControl, FormHelperTe
 import { useState } from "react";
 import { axiosAuthHandler } from "../handler/axiosHandler";
 import { useNavigate } from 'react-router-dom';
+import Footer from "../components/Footer";
 
 function LoginPage() {
   const [loading, setLoading] = useState(false)
@@ -130,6 +131,8 @@ function LoginPage() {
 
         <Text mt={4} textAlign="center">Dont have an account? <Link color="blue" href="/register">Register</Link></Text>
       </Flex>
+
+      <Footer />
     </Center>
   )
 }

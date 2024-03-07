@@ -7,6 +7,7 @@ import Cards from "../components/Card";
 import { getProducts, validateToken } from "./service/HomeService";
 import { AddIcon } from "@chakra-ui/icons";
 import PostNewPhoneForms from "../components/PostNewPhoneForms";
+import Footer from "../components/Footer";
 
 function HomePage() {
   const navigate = useNavigate()
@@ -137,6 +138,8 @@ function HomePage() {
           <Cards key={product.id} product={product} removeFromUI={removeFromUI} setEditProductUI={updateProductUI} />
         ))}
       </Container>
+
+      <Footer />
     </Center>
   )
 }

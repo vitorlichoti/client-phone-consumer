@@ -2,6 +2,7 @@ import { Center, Text, Link, FormControl, FormLabel, Input, Button, Flex, useToa
 import { useState } from "react";
 import { axiosAuthHandler } from "../handler/axiosHandler";
 import { useNavigate } from 'react-router-dom';
+import Footer from "../components/Footer";
 
 function RegisterPage() {
   const toast = useToast()
@@ -136,7 +137,7 @@ function RegisterPage() {
           <Button mt={4} onClick={handleRegister} isLoading={loading}>Register</Button>
         </FormControl>
       </Flex>
-
+      <Footer />
     </Center>
   )
 }
