@@ -2,7 +2,7 @@ import axios from "axios";
 
 const axiosAuthHandler = axios.create({
   baseURL: import.meta.env.VITE_AUTH_API,
-  timeout: 1000
+  timeout: 6000
 })
 
 const axiosProductsHandler = axios.create({
