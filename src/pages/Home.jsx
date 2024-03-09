@@ -127,7 +127,7 @@ function HomePage() {
         </Modal>
       </Center>
 
-      <Container width="100%" display="flex" flexDirection="row" flexWrap="wrap" justifyContent="center" gap="20px"
+      <Container mb={20} width="100%" display="flex" flexDirection="row" flexWrap="wrap" justifyContent="center" gap="20px"
         sx={
           {
             maxWidth: '50%'

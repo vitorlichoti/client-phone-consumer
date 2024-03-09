@@ -41,6 +41,17 @@ function LoginPage() {
     try {
       setLoading(true)
       const data = await axiosAuthHandler.post('/api/auth/login', input)
+
+      if (!data) {
+        setLoading(false)
+        toast({
+          title: "An error occurred, please try again.",
+          status: 'error',
+          isClosable: true,
+        })
+        return
+      }
+
       if (data.data.code === 401) {
         setLoading(false)
         toast({
@@ -76,6 +87,17 @@ function LoginPage() {
 
     } catch (error) {
       setLoading(false)
+      console.log(error);
+      if (!error) {
+        setLoading(false)
+        toast({
+          title: "An error occurred, please try again.",
+          status: 'error',
+          isClosable: true,
+        })
+        return
+      }
+
       if (!error.response.data.message) {
         toast({
           title: "An error occurred, please try again.",

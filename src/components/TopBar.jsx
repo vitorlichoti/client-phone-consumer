@@ -22,8 +22,6 @@ function TopBar() {
         navigate("/");
     }
 
-    console.log(userInfo.avatar_url);
-
     return (
         <div style={{ display: 'flex', justifyContent: 'center', gap: '100px', marginTop: '20px', widt: '100%' }}>
             <Flex>
